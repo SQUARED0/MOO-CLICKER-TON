@@ -14,77 +14,38 @@
 	<link rel="icon" type="image/png" href="icons/icon-512.png">
 	<meta name="theme-color" content="#000000">
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest/dist/index.umd.js"></script>
+
 
 
 </head>
 <body>
 
-<script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest/dist/index.umd.js"></script>
-
-
-
-<div id="ton-connect"></div>
-
+	<iframe id='game_frame'>
 
 <script>
-    const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-        manifestUrl: 'https://<YOUR_APP_URL>/tonconnect-manifest.json',
-        buttonRootId: 'ton-connect'
-    });
-</script>
+    
+    const tonConnect = new TonConnect();
 
+   
+    async function connectWallet() {
+        const wallets = await tonConnect.getWallets();
+        if (wallets.length > 0) {
+            await tonConnect.connect(wallets[0].bridgeUrl);
+            console.log('Wallet Find');
 
-<script>
-	// Ініціалізація TON Connect
-	const tonConnect = new TonConnect();
+		    var iframe = document.getElementById('game_frame');
+			iframe.src = "indexFrame.html"; 
+        } else {
+            console.log('Wallet No Find');
+        }
+    }
 
-	// Підключення до гаманця
-	async function connectWallet() {
-	    const wallets = await tonConnect.getWallets();
-	    if (wallets.length > 0) {
-	        await tonConnect.connect(wallets[0].bridgeUrl);
-	        console.log('Гравець підключений до гаманця');
-	    } else {
-	        console.log('Гаманці не знайдено');
-	    }
-	}
+    connectWallet();
 
-	// Виконання транзакції
-	async function sendTransaction() {
-	    const transactionPayload = {
-	        // Ваша транзакція тут
-	    };
-	    await tonConnect.sendTransaction(transactionPayload);
-	}
-
-	// Встановлення функції для події натискання кнопки
-	document.getElementById('connect-button').addEventListener('click', connectWallet);
-	document.getElementById('transaction-button').addEventListener('click', sendTransaction);
 
 </script>
 
-
-
-<button id="connect-button">Підключитися до гаманця</button>
-<button id="transaction-button">Виконати транзакцію</button>
-
-<script>
-if (location.protocol.substr(0, 4) === "file")
-{
-	alert("Web exports won't work until you upload them. (When running on the file: protocol, browsers block many features from working for security reasons.)");
-}
-</script>
-
-	<noscript>
-		<div id="notSupportedWrap">
-			<h2 id="notSupportedTitle">This content requires JavaScript</h2>
-			<p class="notSupportedMessage">JavaScript appears to be disabled. Please enable it to view this content.</p>
-		</div>
-	</noscript>
-	<script src="scripts/supportcheck.js"></script>
-	<script src="scripts/offlineclient.js" type="module"></script>
-	<script src="scripts/main.js" type="module"></script>
-	<script src="scripts/register-sw.js" type="module"></script>
 
 </body>
 </html>
